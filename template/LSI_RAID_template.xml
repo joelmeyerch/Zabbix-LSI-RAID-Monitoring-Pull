@@ -10,7 +10,7 @@
     <templates>
         <template>
             <template>Template LSI RAID</template>
-            <name>Template LSI RAID (agent + trapper)</name>
+            <name>Template LSI RAID (pull-only)</name>
             <groups>
                 <group>
                     <name>Templates</name>
@@ -34,11 +34,11 @@
             <discovery_rules>
                 <discovery_rule>
                     <name>RAID discovery adapters</name>
-                    <type>2</type>
+                    <type>0</type>
                     <snmp_community/>
                     <snmp_oid/>
                     <key>hw.raid.discovery.adapters</key>
-                    <delay>0</delay>
+                    <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -67,7 +67,7 @@
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.adapter[{#ADAPTER_ID},&quot;fw_version&quot;]</key>
+                            <key>hw.raid.adapter[{#ADAPTER_ID},"fw_version"]</key>
                             <delay>86400</delay>
                             <history>7</history>
                             <trends>365</trends>
@@ -110,7 +110,7 @@
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.adapter[{#ADAPTER_ID},&quot;product_name&quot;]</key>
+                            <key>hw.raid.adapter[{#ADAPTER_ID},"product_name"]</key>
                             <delay>86400</delay>
                             <history>7</history>
                             <trends>365</trends>
@@ -154,11 +154,11 @@
                 </discovery_rule>
                 <discovery_rule>
                     <name>RAID discovery bbu</name>
-                    <type>2</type>
+                    <type>0</type>
                     <snmp_community/>
                     <snmp_oid/>
                     <key>hw.raid.discovery.bbu</key>
-                    <delay>0</delay>
+                    <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -187,7 +187,7 @@
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.bbu[{#ADAPTER_ID},&quot;full_capacity&quot;]</key>
+                            <key>hw.raid.bbu[{#ADAPTER_ID},"full_capacity"]</key>
                             <delay>300</delay>
                             <history>7</history>
                             <trends>365</trends>
@@ -230,7 +230,7 @@
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.bbu[{#ADAPTER_ID},&quot;design_capacity&quot;]</key>
+                            <key>hw.raid.bbu[{#ADAPTER_ID},"design_capacity"]</key>
                             <delay>86400</delay>
                             <history>1</history>
                             <trends>365</trends>
@@ -273,7 +273,7 @@
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.bbu[{#ADAPTER_ID},&quot;date_manufactured&quot;]</key>
+                            <key>hw.raid.bbu[{#ADAPTER_ID},"date_manufactured"]</key>
                             <delay>86400</delay>
                             <history>7</history>
                             <trends>365</trends>
@@ -312,12 +312,12 @@
                         </item_prototype>
                         <item_prototype>
                             <name>BBU state of charge on adapter:{#ADAPTER_ID}</name>
-                            <type>2</type>
+                            <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.bbu[{#ADAPTER_ID},&quot;state_of_charge&quot;]</key>
-                            <delay>0</delay>
+                            <key>hw.raid.bbu[{#ADAPTER_ID},"state_of_charge"]</key>
+                            <delay>300</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -355,12 +355,12 @@
                         </item_prototype>
                         <item_prototype>
                             <name>BBU state on adapter:{#ADAPTER_ID}</name>
-                            <type>2</type>
+                            <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.bbu[{#ADAPTER_ID},&quot;bbu_state&quot;]</key>
-                            <delay>0</delay>
+                            <key>hw.raid.bbu[{#ADAPTER_ID},"bbu_state"]</key>
+                            <delay>300</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -393,15 +393,13 @@
                                     <name>LSI RAID BBU</name>
                                 </application>
                             </applications>
-                            <valuemap>
-                                <name>LSI RAID BBU &amp; LD Status</name>
-                            </valuemap>
+                            <valuemap/>
                             <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template LSI RAID:hw.raid.bbu[{#ADAPTER_ID},&quot;bbu_state&quot;].last()}=1</expression>
+                            <expression>{Template LSI RAID:hw.raid.bbu[{#ADAPTER_ID},"bbu_state"].last()}=1</expression>
                             <name>BBU is not in optimal state on adapter:{#ADAPTER_ID}</name>
                             <url/>
                             <status>0</status>
@@ -410,7 +408,7 @@
                             <type>0</type>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template LSI RAID:hw.raid.bbu[{#ADAPTER_ID},&quot;state_of_charge&quot;].avg(#3)}&lt;55</expression>
+                            <expression>{Template LSI RAID:hw.raid.bbu[{#ADAPTER_ID},"state_of_charge"].avg(#3)}&lt;55</expression>
                             <name>BBU on adapter:{#ADAPTER_ID} charge capacity degraded</name>
                             <url/>
                             <status>0</status>
@@ -419,12 +417,12 @@
                             <type>0</type>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template LSI RAID:hw.raid.bbu[{#ADAPTER_ID},&quot;bbu_state&quot;].nodata(720)}=1</expression>
-                            <name>RAID info is outdated on {HOST.NAME}</name>
+                            <expression>{Template LSI RAID:hw.raid.bbu[{#ADAPTER_ID},"bbu_state"].nodata(720)}=1</expression>
+                            <name>RAID monitoring is not working on {HOST.NAME}</name>
                             <url/>
                             <status>0</status>
                             <priority>5</priority>
-                            <description>RAID INFO not updated more than 10 minutes. Check task scheduler on host and connectivity</description>
+                            <description>RAID monitoring data not received for more than 10 minutes. Check Zabbix agent configuration and RAID tools</description>
                             <type>0</type>
                         </trigger_prototype>
                     </trigger_prototypes>
@@ -433,11 +431,11 @@
                 </discovery_rule>
                 <discovery_rule>
                     <name>RAID discovery pdisks</name>
-                    <type>2</type>
+                    <type>0</type>
                     <snmp_community/>
                     <snmp_oid/>
                     <key>hw.raid.discovery.pdisks</key>
-                    <delay>0</delay>
+                    <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -462,12 +460,12 @@
                     <item_prototypes>
                         <item_prototype>
                             <name>Disk Media errors Adapter:{#ADAPTER_ID},ENC:{#ENCLOSURE_ID},Disk:{#PDRIVE_ID}</name>
-                            <type>2</type>
+                            <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},&quot;media_errors&quot;]</key>
-                            <delay>0</delay>
+                            <key>hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},"media_errors"]</key>
+                            <delay>300</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -509,7 +507,7 @@
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},&quot;inquiry_data&quot;]</key>
+                            <key>hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},"inquiry_data"]</key>
                             <delay>86400</delay>
                             <history>7</history>
                             <trends>365</trends>
@@ -548,12 +546,12 @@
                         </item_prototype>
                         <item_prototype>
                             <name>Disk predictive errors Adapter:{#ADAPTER_ID},ENC:{#ENCLOSURE_ID},Disk:{#PDRIVE_ID}</name>
-                            <type>2</type>
+                            <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},&quot;predictive_errors&quot;]</key>
-                            <delay>0</delay>
+                            <key>hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},"predictive_errors"]</key>
+                            <delay>300</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -595,7 +593,7 @@
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},&quot;raw_size&quot;]</key>
+                            <key>hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},"raw_size"]</key>
                             <delay>86400</delay>
                             <history>7</history>
                             <trends>365</trends>
@@ -634,12 +632,12 @@
                         </item_prototype>
                         <item_prototype>
                             <name>Disk state Adapter:{#ADAPTER_ID},ENC:{#ENCLOSURE_ID},Disk:{#PDRIVE_ID}</name>
-                            <type>2</type>
+                            <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},&quot;firmware_state&quot;]</key>
-                            <delay>0</delay>
+                            <key>hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},"firmware_state"]</key>
+                            <delay>300</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -672,15 +670,13 @@
                                     <name>LSI RAID Physical Volume</name>
                                 </application>
                             </applications>
-                            <valuemap>
-                                <name>LSI RAID PhysDrv Status</name>
-                            </valuemap>
+                            <valuemap/>
                             <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template LSI RAID:hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},&quot;media_errors&quot;].last(0)}#0</expression>
+                            <expression>{Template LSI RAID:hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},"media_errors"].last(0)}#0</expression>
                             <name>Disk have media errors Adapter:{#ADAPTER_ID},ENC:{#ENCLOSURE_ID},Disk:{#PDRIVE_ID}</name>
                             <url/>
                             <status>0</status>
@@ -689,7 +685,7 @@
                             <type>0</type>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template LSI RAID:hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},&quot;predictive_errors&quot;].last(0)}#0</expression>
+                            <expression>{Template LSI RAID:hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},"predictive_errors"].last(0)}#0</expression>
                             <name>Disk have predictive errors Adapter:{#ADAPTER_ID},ENC:{#ENCLOSURE_ID},Disk:{#PDRIVE_ID}</name>
                             <url/>
                             <status>0</status>
@@ -698,7 +694,7 @@
                             <type>0</type>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template LSI RAID:hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},&quot;firmware_state&quot;].last()}=1</expression>
+                            <expression>{Template LSI RAID:hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},"firmware_state"].last()}=1</expression>
                             <name>Disk state Adapter:{#ADAPTER_ID},ENC:{#ENCLOSURE_ID},Disk:{#PDRIVE_ID} is not Optimal</name>
                             <url/>
                             <status>0</status>
@@ -707,7 +703,7 @@
                             <type>0</type>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template LSI RAID:hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},&quot;firmware_state&quot;].last()}=2</expression>
+                            <expression>{Template LSI RAID:hw.raid.physical_disk[{#ADAPTER_ID},{#ENCLOSURE_ID},{#PDRIVE_ID},"firmware_state"].last()}=2</expression>
                             <name>Disk state Adapter:{#ADAPTER_ID},ENC:{#ENCLOSURE_ID},Disk:{#PDRIVE_ID} is Rebuild</name>
                             <url/>
                             <status>0</status>
@@ -721,11 +717,11 @@
                 </discovery_rule>
                 <discovery_rule>
                     <name>RAID discovery vdisks</name>
-                    <type>2</type>
+                    <type>0</type>
                     <snmp_community/>
                     <snmp_oid/>
                     <key>hw.raid.discovery.vdisks</key>
-                    <delay>0</delay>
+                    <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -754,7 +750,7 @@
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.logical_disk[{#ADAPTER_ID},{#VDRIVE_ID},&quot;vd_size&quot;]</key>
+                            <key>hw.raid.logical_disk[{#ADAPTER_ID},{#VDRIVE_ID},"vd_size"]</key>
                             <delay>86400</delay>
                             <history>7</history>
                             <trends>365</trends>
@@ -793,12 +789,12 @@
                         </item_prototype>
                         <item_prototype>
                             <name>RAID Volume state Adapter:{#ADAPTER_ID},ID:{#VDRIVE_ID}</name>
-                            <type>2</type>
+                            <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>hw.raid.logical_disk[{#ADAPTER_ID},{#VDRIVE_ID},&quot;vd_state&quot;]</key>
-                            <delay>0</delay>
+                            <key>hw.raid.logical_disk[{#ADAPTER_ID},{#VDRIVE_ID},"vd_state"]</key>
+                            <delay>300</delay>
                             <history>7</history>
                             <trends>365</trends>
                             <status>0</status>
@@ -831,15 +827,13 @@
                                     <name>LSI RAID Logical Volume</name>
                                 </application>
                             </applications>
-                            <valuemap>
-                                <name>LSI RAID BBU &amp; LD Status</name>
-                            </valuemap>
+                            <valuemap/>
                             <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template LSI RAID:hw.raid.logical_disk[{#ADAPTER_ID},{#VDRIVE_ID},&quot;vd_state&quot;].last()}=1</expression>
+                            <expression>{Template LSI RAID:hw.raid.logical_disk[{#ADAPTER_ID},{#VDRIVE_ID},"vd_state"].last()}=1</expression>
                             <name>RAID Volume Adapter:{#ADAPTER_ID},ID:{#VDRIVE_ID} state is not Optimal</name>
                             <url/>
                             <status>0</status>
